@@ -37,6 +37,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ items, sessions, onBack, d
   const [expandedDayOfWeek, setExpandedDayOfWeek] = useState(false);
   const [excludeZeroDays, setExcludeZeroDays] = useState(false);
 
+  // Calculates start@midnight/end@23:59:59 dates only if timeRange/custom dates have changed; otherwise, uses memoized values
   const { startDate, endDate } = useMemo(() => {
     const now = new Date();
     let start: Date;
@@ -61,7 +62,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ items, sessions, onBack, d
           start = new Date(sy, sm - 1, sd);
         } else {
           start = new Date(now);
-          start.setDate(start.getDate() - 6);
+          start.setDate(start.getDate() - 13);
         }
         if (customEnd) {
           const [ey, em, ed] = customEnd.split('-').map(Number);
@@ -78,6 +79,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ items, sessions, onBack, d
     return { startDate: start, endDate: end };
   }, [timeRange, customStart, customEnd]);
 
+  // Filters sessions based on selected tasks/categories
   const filteredSessions = useMemo(() => {
     if (selectedItems.length === 0) return sessions;
 

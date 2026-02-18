@@ -3,6 +3,7 @@ const CACHE_NAME = 'time-tracker-v0.1';
 // Add any other static assets your app needs offline
 const STATIC_ASSETS = [
   '/',
+  '/index.html'
 ];
 
 self.addEventListener('install', (event) => {

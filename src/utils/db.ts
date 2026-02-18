@@ -9,6 +9,10 @@ import { Item, TimingSession, ExportData } from "../types";
 // =============================================================================
 // Database setup
 // =============================================================================
+const DB_NAME = "time-tracker-db";
+const DB_VERSION = 2;
+let dbInstance: IDBPDatabase<TimeTrackerDB> | null = null;
+
 interface TimeTrackerDB extends DBSchema {
   items: {
     key: string;
@@ -24,13 +28,10 @@ interface TimeTrackerDB extends DBSchema {
   };
 }
 
-const DB_NAME = "time-tracker-db";
-const DB_VERSION = 2;
-let dbInstance: IDBPDatabase<TimeTrackerDB> | null = null;
-
 // =============================================================================
-/*                             Database Initialization                        */
+// Database Initialization
 // =============================================================================
+/** Opens database if it exists, and handles upgrade/creation as needed */
 export async function getDB(): Promise<IDBPDatabase<TimeTrackerDB>> {
   if (dbInstance) return dbInstance;
 
@@ -50,27 +51,29 @@ export async function getDB(): Promise<IDBPDatabase<TimeTrackerDB>> {
   return dbInstance;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                Item Methods                                */
-/* -------------------------------------------------------------------------- */
+// =============================================================================
+// Item Methods
+// =============================================================================
+/** Returns a list of all categories/tasks */
 export async function getAllItems(): Promise<Item[]> {
   const db = await getDB();
   return db.getAll("items");
 }
 
+/** Gets an item by id, if it exists (returns undefined otherwise) */
 export async function getItem(id: string): Promise<Item | undefined> {
   const db = await getDB();
   return db.get("items", id);
 }
 
+/** Saves an item to the database */
 export async function saveItem(item: Item): Promise<void> {
   const db = await getDB();
   await db.put("items", item);
 }
 
-/**
- * Deletes an item and all its children (cascade), but does NOT delete sessions.
- */
+/** Deletes an item and all its children (cascade), but does NOT delete
+ * associated sessions. */
 export async function deleteItem(id: string): Promise<void> {
   const db = await getDB();
   const allItems = await db.getAll("items");
@@ -95,40 +98,40 @@ export async function deleteItem(id: string): Promise<void> {
   await tx.done;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                               Session Methods                              */
-/* -------------------------------------------------------------------------- */
+// =============================================================================
+// Session Methods
+// =============================================================================
+/** Returns a list of all recorded timing sessions */
 export async function getAllSessions(): Promise<TimingSession[]> {
   const db = await getDB();
   return db.getAll("sessions");
 }
 
+/** Gets a session by id, if it exists (returns undefined otherwise) */
 export async function getSession(id: string): Promise<TimingSession | undefined> {
   const db = await getDB();
   return db.get("sessions", id);
 }
 
+/** Saves a session to the database */
 export async function saveSession(session: TimingSession): Promise<void> {
   const db = await getDB();
   await db.put("sessions", session);
 }
 
+/** Deletes a session by id */
 export async function deleteSession(id: string): Promise<void> {
   const db = await getDB();
   await db.delete("sessions", id);
 }
 
-/**
- * Get all sessions for a specific task
- */
+/** Get all sessions for a specific task */
 export async function getSessionsByTask(taskId: string): Promise<TimingSession[]> {
   const db = await getDB();
   return db.getAllFromIndex("sessions", "by-task", taskId);
 }
 
-/**
- * Delete all sessions for a specific task
- */
+/** Delete all sessions for a specific task */
 export async function deleteSessionsByTask(taskId: string): Promise<number> {
   const db = await getDB();
   const sessions = await db.getAllFromIndex("sessions", "by-task", taskId);
@@ -144,9 +147,10 @@ export async function deleteSessionsByTask(taskId: string): Promise<number> {
   return sessions.length;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                              Clear / Export Methods                        */
-/* -------------------------------------------------------------------------- */
+// =============================================================================
+// Clear / Export Methods
+// =============================================================================
+/** Deletes all categories/tasks and recorded sessions */
 export async function clearAllData(): Promise<void> {
   const db = await getDB();
   const tx = db.transaction(["items", "sessions"], "readwrite");
@@ -155,6 +159,7 @@ export async function clearAllData(): Promise<void> {
   await tx.done;
 }
 
+/** Deletes all sessions that were recorded in a specified date range */
 export async function clearSessionsInRange(startMs: number, endMs: number): Promise<number> {
   const db = await getDB();
   const allSessions = await db.getAll("sessions");
@@ -174,6 +179,7 @@ export async function clearSessionsInRange(startMs: number, endMs: number): Prom
   return sessionsToDelete.length;
 }
 
+/** Prepares data for export */
 export async function exportData(): Promise<ExportData> {
   const items = await getAllItems();
   const sessions = await getAllSessions();
@@ -185,6 +191,7 @@ export async function exportData(): Promise<ExportData> {
   };
 }
 
+/** Handles importing data */
 export async function importData(data: ExportData): Promise<void> {
   const db = await getDB();
   const tx = db.transaction(["items", "sessions"], "readwrite");

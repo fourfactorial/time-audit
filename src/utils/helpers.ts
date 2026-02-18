@@ -1,24 +1,28 @@
 import { Item, TimingSession } from '../types';
 
+/** Generates unique ids for each task/category so that they are
+ * identifiable/differentiable, even with renaming or duplicate names */
 export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
+/** Default color options for tasks and categories. */
 export const DEFAULT_COLORS = [
+  '#FF006E', // Magenta
   '#E63946', // Red
+  '#FB5607', // Orange-red
   '#F77F00', // Orange
   '#FCBF49', // Yellow
-  '#06A77D', // Green
+  '#06C07D', // Green
+  '#06FFA5', // Mint
+  '#4CC9F0', // Cyan
   '#4EA8DE', // Blue
   '#5E60CE', // Indigo
   '#9D4EDD', // Violet
-  '#FF006E', // Magenta
-  '#FB5607', // Orange-red
-  '#06FFA5', // Mint
-  '#4CC9F0', // Cyan
   '#7209B7', // Purple
 ];
 
+/** Calculate session duration, not counting breaks */
 export function calculateSessionDuration(session: TimingSession): number {
   return session.intervals.reduce((total, interval) => {
     const end = interval.end || Date.now();
@@ -26,6 +30,7 @@ export function calculateSessionDuration(session: TimingSession): number {
   }, 0);
 }
 
+/** Formulate a duration as a string, ignoring seconds for longer durations */
 export function formatDuration(ms: number): string {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -42,6 +47,7 @@ export function formatDuration(ms: number): string {
   }
 }
 
+/** Format a duration as HH:MM:SS */
 export function formatTime(ms: number): string {
   const seconds = Math.floor(ms / 1000) % 60;
   const minutes = Math.floor(ms / 60000) % 60;
@@ -50,14 +56,17 @@ export function formatTime(ms: number): string {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
+/** Find all direct members of a category given a list of all items and its id */
 export function getItemChildren(items: Item[], parentId: string): Item[] {
   return items.filter(item => item.parentId === parentId);
 }
 
+/** Find all root items (no parent) given a list of all items */
 export function getRootItems(items: Item[]): Item[] {
   return items.filter(item => item.parentId === null);
 }
 
+/** Find all ancestors of an item */
 export function getItemPath(items: Item[], itemId: string): string[] {
   const path: string[] = [];
   let currentId: string | null = itemId;
@@ -72,12 +81,14 @@ export function getItemPath(items: Item[], itemId: string): string[] {
   return path;
 }
 
+/** Format a string of all ancestors of an item ('' if root) */
 export function getItemPathString(items: Item[], itemId: string): string {
   const path = getItemPath(items, itemId);
   // Remove the last element (the item itself) and join with /
   return path.length > 1 ? path.slice(0, -1).join('/') : '';
 }
 
+/** Get ids of all (direct and indirect) descendant tasks */
 export function getAllDescendantTaskIds(items: Item[], categoryId: string): string[] {
   const taskIds: string[] = [];
   const queue = [categoryId];
@@ -98,18 +109,21 @@ export function getAllDescendantTaskIds(items: Item[], categoryId: string): stri
   return taskIds;
 }
 
+/** Find start of day as timestamp given current timezone */
 export function getStartOfDay(date: Date): number {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
   return d.getTime();
 }
 
+/** Find end of day as timestamp given current timezone */
 export function getEndOfDay(date: Date): number {
   const d = new Date(date);
   d.setHours(23, 59, 59, 999);
   return d.getTime();
 }
 
+/** Create array of days in a given range; includes start and end */
 export function getDaysArray(startDate: Date, endDate: Date): Date[] {
   const days: Date[] = [];
   const current = new Date(startDate);
@@ -122,6 +136,10 @@ export function getDaysArray(startDate: Date, endDate: Date): Date[] {
   return days;
 }
 
+/** Given array of all timing sessions and a date range, determines if the
+ * session took place in the desired interval, and if so splits each interval
+ * over the days where it took place. Returns Map with key=date, value=duration
+ * of interval on that date. */
 export function calculateTimeByDay(
   sessions: TimingSession[],
   startDate: Date,
@@ -168,6 +186,8 @@ export function calculateTimeByDay(
   return timeByDay;
 }
 
+/** Downloads the JSON data when the user exports data. (Data itself is formatted
+ * by ManageItems handleExport, using idb export methods) */
 export function downloadJSON(data: any, filename: string): void {
   const json = JSON.stringify(data, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
