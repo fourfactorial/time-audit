@@ -1,0 +1,237 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s6) var(--s6) var(--s4);
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--s3) var(--s8);
+}
+
+/* Tree item */
+.treeItem {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--s3);
+  border-radius: var(--r2);
+  transition: background var(--t-fast);
+  min-height: 52px;
+}
+
+.treeItem:hover { background: var(--surface-2); }
+
+.indent {
+  flex-shrink: 0;
+}
+
+.badge {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r2);
+}
+
+.badge.task { border-radius: 50%; }
+
+.name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s1);
+  flex-shrink: 0;
+  /* Always visible — important for touchscreen use */
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-3);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r2);
+  transition: color var(--t-fast), background var(--t-fast);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.actionBtn:hover {
+  color: var(--text);
+  background: var(--bg-3);
+}
+
+.actionBtn.danger:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: var(--s16) var(--s8);
+  color: var(--text-3);
+}
+
+.emptyTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: var(--s2);
+  margin-top: var(--s4);
+}
+
+/* Modal form */
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+
+.formLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.formInput {
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  transition: border-color var(--t-fast);
+  width: 100%;
+}
+.formInput:focus {
+  outline: none;
+  border-color: var(--border-2);
+}
+
+.formSelect {
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.typeToggle {
+  display: flex;
+  gap: var(--s2);
+}
+
+.typeBtn {
+  flex: 1;
+  padding: var(--s3);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  background: var(--surface);
+  color: var(--text-2);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+
+.typeBtn.selected {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--text-inv);
+}
+
+/* Delete confirm */
+.deleteWarning {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: var(--s4);
+}
+
+.deleteOptions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.deleteOption {
+  padding: var(--s4);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+
+.deleteOption:hover {
+  border-color: var(--border-2);
+  background: var(--surface-2);
+}
+
+.deleteOption.dangerous:hover {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.deleteOptionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.deleteOption.dangerous .deleteOptionTitle {
+  color: var(--danger);
+}
+
+.deleteOptionDesc {
+  font-size: 12px;
+  color: var(--text-3);
+}

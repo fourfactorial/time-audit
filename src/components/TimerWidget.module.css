@@ -1,0 +1,86 @@
+.widget {
+  /* Anchored to lower-left of the content column (which is position:relative) */
+  position: absolute;
+  bottom: calc(var(--s4));
+  left: var(--s4);
+  z-index: 200;
+  background: var(--text);
+  color: var(--text-inv);
+  border-radius: var(--r3);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  cursor: pointer;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+  border: none;
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+  animation: slideIn 200ms ease;
+  min-height: 44px;  /* touch target */
+}
+
+.widget:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), 0 12px 40px rgba(0,0,0,0.2);
+}
+.widget:active { transform: translateY(0); }
+
+.colorDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.taskName {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.7;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.time {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.pauseIndicator {
+  font-size: 11px;
+  opacity: 0.6;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.pulsingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.8;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

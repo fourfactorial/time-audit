@@ -1,172 +1,79 @@
-import { useState, useCallback } from 'react';
-import { ViewMode, Item, Task, TimingSession, ActiveTimerState } from './types';
-import { useData } from './hooks/useData';
-import { useTheme } from './hooks/useTheme';
-import { useSettings } from './hooks/useSettings';
-import { ItemList } from './components/ItemList';
-import { Timer } from './components/Timer';
-import { Analytics } from './components/Analytics';
-import { ManageItems } from './components/ManageItems';
-import { FloatingTimer } from './components/FloatingTimer';
-import './App.css';
+import { useCallback, useState } from 'react';
+import styles from './App.module.css';
+import { useApp } from './store/AppContext';
+import NavBar from './components/NavBar';
+import TimerWidget from './components/TimerWidget';
+import InterruptedBanner from './components/InterruptedBanner';
+import TimingScreen from './screens/TimingScreen';
+import AnalyticsScreen from './screens/AnalyticsScreen';
+import CategoriesScreen from './screens/CategoriesScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
-function App() {
-  const {
-    items,
-    sessions,
-    loading,
-    addItem,
-    updateItem,
-    removeItem,
-    addSession,
-    reload,
-  } = useData();
-
-  const { themeMode, changeTheme } = useTheme();
-  const { analyticsDefaults, setAnalyticsDefaults } = useSettings();
-
-  const [viewMode, setViewMode] = useState<ViewMode>('home');
-  const [currentCategoryId, setCurrentCategoryId] = useState<string | null>(null);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [breadcrumbs, setBreadcrumbs] = useState<Array<{ id: string; name: string }>>([]);
-  const [activeTimer, setActiveTimer] = useState<ActiveTimerState | null>(null);
-
-  const handleSelectItem = (item: Item) => {
-    if (item.type === 'category') {
-      setBreadcrumbs([...breadcrumbs, { id: item.id, name: item.name }]);
-      setCurrentCategoryId(item.id);
-    } else {
-      setSelectedTask(item as Task);
-      setViewMode('timer');
-    }
-  };
-
-  const handleBack = () => {
-    if (breadcrumbs.length > 0) {
-      const newBreadcrumbs = [...breadcrumbs];
-      newBreadcrumbs.pop();
-      setBreadcrumbs(newBreadcrumbs);
-      setCurrentCategoryId(newBreadcrumbs.length > 0 ? newBreadcrumbs[newBreadcrumbs.length - 1].id : null);
-    }
-  };
-
-  const handleBackToHome = () => {
-    setViewMode('home');
-    setCurrentCategoryId(null);
-    if (!activeTimer) {
-      setSelectedTask(null);
-    }
-    setBreadcrumbs([]);
-  };
-
-  const handleReturnToTimer = () => {
-    if (activeTimer) {
-      const task = items.find(item => item.id === activeTimer.taskId) as Task;
-      if (task) {
-        setSelectedTask(task);
-        setViewMode('timer');
-      }
-    }
-  };
-
-  const handleSaveSession = (session: TimingSession) => {
-    addSession(session);
-    setActiveTimer(null);
-  };
-
-  const handleTimerStateChange = useCallback((state: ActiveTimerState | null) => {
-    setActiveTimer(state);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="app loading">
-        <div className="loader">Loading...</div>
-      </div>
-    );
-  }
-
+function LoadingScreen() {
   return (
-    <div className="app">
-      <nav className="main-nav">
-        <button
-          className={viewMode === 'home' ? 'active' : ''}
-          onClick={handleBackToHome}
-        >
-          <span className="nav-icon">⏱</span>
-          <span className="nav-label">Track</span>
-        </button>
-        <button
-          className={viewMode === 'analytics' ? 'active' : ''}
-          onClick={() => setViewMode('analytics')}
-        >
-          <span className="nav-icon">▦</span>
-          <span className="nav-label">Stats</span>
-        </button>
-        <button
-          className={viewMode === 'manage' ? 'active' : ''}
-          onClick={() => setViewMode('manage')}
-        >
-          <span className="nav-icon">⚙</span>
-          <span className="nav-label">Manage</span>
-        </button>
-      </nav>
-
-      <main className="main-content">
-        {viewMode === 'home' && (
-          <ItemList
-            items={items}
-            currentCategoryId={currentCategoryId}
-            onSelectItem={handleSelectItem}
-            onBack={handleBack}
-          />
-        )}
-
-        {viewMode === 'timer' && selectedTask && (
-          <Timer
-            task={selectedTask}
-            onSave={handleSaveSession}
-            onBack={handleBackToHome}
-            activeTimer={activeTimer}
-            onTimerStateChange={handleTimerStateChange}
-          />
-        )}
-
-        {viewMode === 'analytics' && (
-          <Analytics
-            items={items}
-            sessions={sessions}
-            onBack={handleBackToHome}
-            defaultTimeRange={analyticsDefaults.timeRange}
-            defaultCustomStart={analyticsDefaults.customStart}
-            defaultCustomEnd={analyticsDefaults.customEnd}
-          />
-        )}
-
-        {viewMode === 'manage' && (
-          <ManageItems
-            items={items}
-            onAdd={addItem}
-            onUpdate={updateItem}
-            onDelete={removeItem}
-            onBack={handleBackToHome}
-            onImport={reload}
-            themeMode={themeMode}
-            onThemeChange={changeTheme}
-            analyticsDefaults={analyticsDefaults}
-            onAnalyticsDefaultsChange={setAnalyticsDefaults}
-          />
-        )}
-      </main>
-
-      {activeTimer && viewMode !== 'timer' && (
-        <FloatingTimer
-          timerState={activeTimer}
-          onReturnToTimer={handleReturnToTimer}
-        />
-      )}
+    <div className={styles.loading}>
+      <div className={styles.loadingDot} />
     </div>
   );
 }
 
-export default App;
+function AppShell() {
+  const { state, navigate } = useApp();
+  const { screen, loaded } = state;
+
+  // Track which task the timing screen is currently showing (null = browse view)
+  const [activeSessionTaskId, setActiveSessionTaskId] = useState<string | null>(null);
+  // Task id to jump to on next render of TimingScreen (set by widget tap)
+  const [pendingJumpTaskId, setPendingJumpTaskId] = useState<string | null>(null);
+
+  const handleWidgetClick = useCallback((taskId: string) => {
+    navigate('timing');
+    setPendingJumpTaskId(taskId);
+  }, [navigate]);
+
+  const handleJumpConsumed = useCallback(() => {
+    setPendingJumpTaskId(null);
+  }, []);
+
+  // Widget is hidden only when we're already looking at the active session
+  const isOnActiveSession =
+    screen === 'timing' &&
+    activeSessionTaskId !== null &&
+    activeSessionTaskId === state.timer?.taskId;
+
+  if (!loaded) return <LoadingScreen />;
+
+  return (
+    <div className={styles.outerShell}>
+      {/* Content column — centred, max 768px */}
+      <div className={styles.contentCol}>
+        <InterruptedBanner />
+        <main className={styles.main} role="main">
+          {screen === 'timing' && (
+            <TimingScreen
+              jumpToTaskId={pendingJumpTaskId}
+              onJumpConsumed={handleJumpConsumed}
+              onActiveSessionChange={setActiveSessionTaskId}
+            />
+          )}
+          {screen === 'analytics'  && <AnalyticsScreen />}
+          {screen === 'categories' && <CategoriesScreen />}
+          {screen === 'settings'   && <SettingsScreen />}
+        </main>
+
+        {/* Floating timer widget — lower-left, absolute within column */}
+        <TimerWidget
+          onGoToSession={handleWidgetClick}
+          isOnActiveSession={isOnActiveSession}
+        />
+      </div>
+
+      {/* Nav bar — full viewport width */}
+      <div className={styles.navRow}>
+        <NavBar current={screen} onNavigate={navigate} />
+      </div>
+    </div>
+  );
+}
+
+export default AppShell;

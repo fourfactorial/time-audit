@@ -1,0 +1,59 @@
+/* NavBar.module.css */
+
+/* Outer wrapper already spans full viewport width (set by App.tsx navRow).
+   We centre the tab buttons within a max-width column to match the content. */
+.nav {
+  display: flex;
+  justify-content: center;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  height: calc(var(--nav-h) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+}
+
+.inner {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  max-width: 768px;
+}
+
+.item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--text-3);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: var(--s2) var(--s1);
+  min-height: 44px;         /* touch target */
+  transition: color var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.item:hover { color: var(--text-2); }
+
+.item.active { color: var(--text); background: var(--surface-2); border-radius: var(--r2); }
+
+/* removed active line indicator */
+
+.iconWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.label { line-height: 1; }

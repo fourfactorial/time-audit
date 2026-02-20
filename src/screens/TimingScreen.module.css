@@ -1,0 +1,336 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.header {
+  padding: var(--s6) var(--s6) var(--s4);
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+/* ── Browse view ── */
+
+.browse {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--s4) var(--s4);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s3) var(--s2);
+  flex-wrap: wrap;
+}
+
+.breadcrumbItem {
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-2);
+  cursor: pointer;
+  padding: var(--s1) var(--s2);
+  border-radius: var(--r1);
+  transition: color var(--t-fast), background var(--t-fast);
+}
+.breadcrumbItem:hover { color: var(--text); background: var(--surface-2); }
+
+.breadcrumbSep {
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+.breadcrumbCurrent {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+  padding: var(--s1) var(--s2);
+}
+
+.itemGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s2);
+}
+
+@media (min-width: 480px) {
+  .itemGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+.itemCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r3);
+  cursor: pointer;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
+  text-align: left;
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.itemCard:hover {
+  border-color: var(--border-2);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.itemCard:active { transform: translateY(0); }
+
+.itemBadge {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.itemBadge.task {
+  border-radius: 50%;
+}
+
+.itemText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.itemName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.itemMeta {
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 400;
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--s16) var(--s8);
+  color: var(--text-3);
+}
+
+.emptyIcon {
+  margin-bottom: var(--s4);
+  opacity: 0.3;
+}
+
+.emptyTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: var(--s2);
+}
+
+.emptyText {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── Timer view ── */
+
+.timerView {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s8) var(--s6);
+  gap: var(--s8);
+}
+
+.timerTaskInfo {
+  text-align: center;
+}
+
+.timerBreadcrumb {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-bottom: var(--s2);
+  letter-spacing: 0.02em;
+}
+
+.timerTaskName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  justify-content: center;
+}
+
+.timerColorDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.timerDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s4);
+}
+
+.timerTime {
+  font-family: var(--font-mono);
+  font-size: clamp(52px, 14vw, 84px);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1;
+  transition: color var(--t-med);
+  font-variant-numeric: tabular-nums;
+}
+
+.timerTime.paused {
+  color: var(--text-3);
+}
+
+.timerStatusLabel {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  color: var(--text-3);
+  text-transform: uppercase;
+  height: 16px;
+}
+
+.timerDuration {
+  font-size: 13px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+}
+
+/* Control buttons */
+.timerControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s5);
+  width: 100%;
+  max-width: 360px;
+}
+
+.mainControls {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+}
+
+.bigBtn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--text);
+  color: var(--text-inv);
+  transition: transform var(--t-fast), opacity var(--t-fast);
+  box-shadow: var(--shadow-md);
+  -webkit-tap-highlight-color: transparent;
+}
+.bigBtn:hover { opacity: 0.85; }
+.bigBtn:active { transform: scale(0.95); }
+
+.smallBtn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--text-2);
+  transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.smallBtn:hover { background: var(--surface-2); color: var(--text); }
+.smallBtn:active { transform: scale(0.95); }
+
+.cancelRow {
+  display: flex;
+  gap: var(--s3);
+}
+
+/* Manual session form */
+.addManualBtn {
+  margin: var(--s4) var(--s4) var(--s4);
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
+}
+
+.formLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.formInput {
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  transition: border-color var(--t-fast);
+  width: 100%;
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: var(--border-2);
+}
+
+.formSelect {
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  width: 100%;
+  cursor: pointer;
+}

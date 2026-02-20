@@ -1,0 +1,162 @@
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Design Tokens — Light theme ────────────────────────────────────────── */
+:root {
+  --bg:         #faf9f7;
+  --bg-2:       #f2f0ec;
+  --bg-3:       #e8e4de;
+  --surface:    #ffffff;
+  --surface-2:  #f5f3ef;
+  --border:     #dedad4;
+  --border-2:   #ccc8c0;
+  --text:       #1c1a17;
+  --text-2:     #5a5650;
+  --text-3:     #9a958d;
+  --text-inv:   #faf9f7;
+  --accent:     #1c1a17;
+  --accent-soft:#e8e4de;
+  --danger:     #c0392b;
+  --danger-soft:#fdecea;
+  --success:    #27ae60;
+
+  /* Type */
+  --font-sans:  'DM Sans', system-ui, sans-serif;
+  --font-mono:  'DM Mono', 'Courier New', monospace;
+
+  /* Spacing */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+  --s10: 40px;
+  --s12: 48px;
+  --s16: 64px;
+
+  /* Radius */
+  --r1: 4px;
+  --r2: 8px;
+  --r3: 12px;
+  --r4: 16px;
+  --r-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow:    0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+
+  /* Layout */
+  --nav-h: 64px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Transitions */
+  --t-fast: 120ms ease;
+  --t-med:  200ms ease;
+}
+
+/* ── Dark theme — explicit [data-theme="dark"] ───────────────────────────── */
+/* Based on #0a0e27 — a cool deep-blue-navy, not sepia */
+:root[data-theme="dark"] {
+  --bg:         #0a0e27;
+  --bg-2:       #0f1335;
+  --bg-3:       #161b42;
+  --surface:    #0f1335;
+  --surface-2:  #161b42;
+  --border:     #1e2550;
+  --border-2:   #2a3366;
+  --text:       #e8eaf6;
+  --text-2:     #8892c8;
+  --text-3:     #4a5494;
+  --text-inv:   #0a0e27;
+  --accent:     #e8eaf6;
+  --accent-soft:#161b42;
+  --danger:     #e74c3c;
+  --danger-soft:#2a1218;
+  --success:    #2ecc71;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow:    0 2px 8px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.7);
+}
+
+/* ── System dark preference — only when user chose "system" (no data-theme) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --bg:         #0a0e27;
+    --bg-2:       #0f1335;
+    --bg-3:       #161b42;
+    --surface:    #0f1335;
+    --surface-2:  #161b42;
+    --border:     #1e2550;
+    --border-2:   #2a3366;
+    --text:       #e8eaf6;
+    --text-2:     #8892c8;
+    --text-3:     #4a5494;
+    --text-inv:   #0a0e27;
+    --accent:     #e8eaf6;
+    --accent-soft:#161b42;
+    --danger:     #e74c3c;
+    --danger-soft:#2a1218;
+    --success:    #2ecc71;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+    --shadow:    0 2px 8px rgba(0,0,0,0.5);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.6);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.7);
+  }
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Typography ──────────────────────────────────────────────────────────── */
+h1 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }
+h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
+h3 { font-size: 1rem;    font-weight: 600; letter-spacing: -0.01em; }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: var(--r-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* ── Focus ───────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Selection ───────────────────────────────────────────────────────────── */
+::selection { background: var(--accent-soft); }
+
+/* ── Utility ─────────────────────────────────────────────────────────────── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

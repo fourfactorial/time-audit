@@ -1,19 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './global.css'
+import App from './App'
+import { AppProvider } from './store/AppContext'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+    <AppProvider>
+      <App />
+    </AppProvider>
+  </React.StrictMode>,
+)
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then((reg) => console.log('SW registered:', reg.scope))
-      .catch((err) => console.error('SW registration failed:', err));
-  });
-}
+// Service worker is registered automatically by vite-plugin-pwa via injectRegister: 'auto'.
+// No manual registration needed here.

@@ -1,0 +1,60 @@
+/* 
+  On desktop (≥768px) the content column is centred with max-width.
+  The nav bar always spans full viewport width — no side borders.
+*/
+
+.outerShell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: var(--bg);
+  position: relative;
+}
+
+/* Content area: centred, capped at 768px, no side borders */
+.contentCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  position: relative;   /* so fixed-within-column widgets can anchor here */
+}
+
+/* Nav bar: always full width */
+.navRow {
+  width: 100%;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+.main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--bg);
+}
+
+.loadingDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-3);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1); }
+}
