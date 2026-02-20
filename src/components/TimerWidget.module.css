@@ -1,11 +1,10 @@
 .widget {
-  /* Anchored to lower-left of the content column (which is position:relative) */
   position: absolute;
   bottom: calc(var(--s4));
   left: var(--s4);
   z-index: 200;
-  background: var(--text);
-  color: var(--text-inv);
+  /* background set inline via task color */
+  color: #fff;
   border-radius: var(--r3);
   box-shadow: var(--shadow-lg);
   display: flex;
@@ -18,7 +17,7 @@
   font-family: var(--font-sans);
   -webkit-tap-highlight-color: transparent;
   animation: slideIn 200ms ease;
-  min-height: 44px;  /* touch target */
+  min-height: 44px;
 }
 
 .widget:hover {
@@ -26,13 +25,6 @@
   box-shadow: var(--shadow-lg), 0 12px 40px rgba(0,0,0,0.2);
 }
 .widget:active { transform: translateY(0); }
-
-.colorDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
 
 .info {
   display: flex;

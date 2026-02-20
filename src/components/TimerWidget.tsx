@@ -49,13 +49,10 @@ export default function TimerWidget({ onGoToSession, isOnActiveSession }: Props)
   return (
     <button
       className={styles.widget}
+      style={{ background: task?.color ?? 'var(--surface-2)' }}
       onClick={handleClick}
       aria-label={`Timer running for ${task?.name ?? 'Unknown task'}. Tap to go to session.`}
     >
-      <span
-        className={styles.colorDot}
-        style={{ background: task?.color ?? '#888' }}
-      />
       <span className={styles.info}>
         <span className={styles.taskName}>{task?.name ?? 'Unknown'}</span>
         <span className={styles.time}>{formatTime(elapsed)}</span>

@@ -524,15 +524,21 @@ export default function AnalyticsScreen() {
               <div className={styles.dowTable}>
                 {DOW.map((dayName, i) => {
                   const d = dowData[i];
+                  const topTasks = Object.entries(d.byTaskAvg)
+                    .filter(([, ms]) => ms > 0)
+                    .sort(([, a], [, b]) => b - a)
+                    .slice(0, 4);
                   return (
                     <div key={dayName} className={styles.dowRow}>
-                      <div className={styles.dowDay}>{dayName}</div>
-                      <div className={styles.dowTasks}>
-                        {Object.entries(d.byTaskAvg)
-                          .filter(([, ms]) => ms > 0)
-                          .sort(([, a], [, b]) => b - a)
-                          .slice(0, 4)
-                          .map(([tid, ms]) => {
+                      <div className={styles.dowRowHeader}>
+                        <span className={styles.dowDay}>{dayName}</span>
+                        <span className={styles.dowTotal}>
+                          {d.totalAvg > 0 ? fmtDuration(d.totalAvg, true) : '—'}
+                        </span>
+                      </div>
+                      {topTasks.length > 0 && (
+                        <div className={styles.dowTasks}>
+                          {topTasks.map(([tid, ms]) => {
                             const cat = getCat(tid);
                             return (
                               <div key={tid} className={styles.dowTaskRow}>
@@ -541,26 +547,19 @@ export default function AnalyticsScreen() {
                                     <path d="M2 4a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4z" />
                                   </svg>
                                 ) : (
-                                  <span
-                                    style={{
-                                      width: 8, height: 8, borderRadius: '50%',
-                                      background: cat?.color ?? '#888',
-                                      flexShrink: 0, display: 'inline-block',
-                                    }}
-                                  />
+                                  <span style={{
+                                    width: 8, height: 8, borderRadius: '50%',
+                                    background: cat?.color ?? '#888',
+                                    flexShrink: 0, display: 'inline-block',
+                                  }} />
                                 )}
                                 <span className={styles.dowTaskName}>{cat?.name ?? '?'}</span>
                                 <span className={styles.dowTaskTime}>{fmtDuration(ms, true)}</span>
                               </div>
                             );
                           })}
-                        {d.totalAvg === 0 && (
-                          <span style={{ fontSize: 12, color: 'var(--text-3)' }}>—</span>
-                        )}
-                      </div>
-                      <div className={styles.dowTotal}>
-                        {d.totalAvg > 0 ? fmtDuration(d.totalAvg, true) : '—'}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
