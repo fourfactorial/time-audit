@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 const repo_name = `time-audit`;
 
 export default defineConfig({
+  base: repo_name,
   plugins: [
     react(),
     VitePWA({
