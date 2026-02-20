@@ -276,6 +276,12 @@
   text-overflow: ellipsis;
 }
 
+.breakdownPath {
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 400;
+}
+
 .breakdownBar {
   height: 4px;
   border-radius: var(--r-full);

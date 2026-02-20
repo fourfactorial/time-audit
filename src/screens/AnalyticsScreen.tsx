@@ -308,6 +308,20 @@ export default function AnalyticsScreen() {
   const showDowSection = ['28d', '6m', 'custom'].includes(period);
 
   const getCat = (id: string) => categories.find((c) => c.id === id);
+
+  // Returns ancestor path string like "Foo/Bar" (excludes the item itself)
+  const getPath = (id: string): string => {
+    const parts: string[] = [];
+    let cur = categories.find((c) => c.id === id)?.parentId ?? null;
+    while (cur) {
+      const cat = categories.find((c) => c.id === cur);
+      if (!cat) break;
+      parts.unshift(cat.name);
+      cur = cat.parentId;
+    }
+    return parts.join('/');
+  };
+
   const maxTaskAvg = Math.max(...Object.values(taskAvg), 1);
 
   return (
@@ -459,7 +473,10 @@ export default function AnalyticsScreen() {
                 return (
                   <div key={id} className={styles.breakdownRow}>
                     <span className={styles.breakdownColor} style={{ background: cat?.color ?? '#888' }} />
-                    <span className={styles.breakdownName}>{cat?.name ?? 'Unknown'}</span>
+                    <span className={styles.breakdownName}>
+                      {cat?.name ?? 'Unknown'}
+                      {getPath(id) && <span className={styles.breakdownPath}> ({getPath(id)})</span>}
+                    </span>
                     <div className={styles.breakdownBar}>
                       <div
                         className={styles.breakdownBarFill}
@@ -553,7 +570,10 @@ export default function AnalyticsScreen() {
                                     flexShrink: 0, display: 'inline-block',
                                   }} />
                                 )}
-                                <span className={styles.dowTaskName}>{cat?.name ?? '?'}</span>
+                                <span className={styles.dowTaskName}>
+                                  {cat?.name ?? '?'}
+                                  {getPath(tid) && <span className={styles.breakdownPath}> ({getPath(tid)})</span>}
+                                </span>
                                 <span className={styles.dowTaskTime}>{fmtDuration(ms, true)}</span>
                               </div>
                             );
