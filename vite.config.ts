@@ -29,6 +29,7 @@ export default defineConfig({
         name: 'Time Tracking and Analytics',
         short_name: 'Time Tracker',
         description: "Know how much time you're spending on different tasks",
+        start_url: repo_name,
         theme_color: '#131210',
         background_color: '#131210',
         display: 'standalone',
